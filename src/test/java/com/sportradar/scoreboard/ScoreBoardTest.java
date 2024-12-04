@@ -30,7 +30,7 @@ public class ScoreBoardTest {
         assertEquals(homeTeam, match.getHomeTeamName());
         assertEquals(awayTeam, match.getAwayTeamName());
         assertEquals(0, match.getAwayTeamScore());
-        assertEquals(0, match.getHomeTeamName());
+        assertEquals(0, match.getHomeTeamScore());
     }
 
     @Test
@@ -65,6 +65,20 @@ public class ScoreBoardTest {
     }
 
     @Test
+    void testStartMatchEmptyTeamName() {
+        // Act & Assert
+        assertThrows(ScoreBoardException.class, () -> scoreBoard.startMatch("", "Team B"), "Should throw exception for empty home team");
+        assertThrows(ScoreBoardException.class, () -> scoreBoard.startMatch("Team A", ""), "Should throw exception for empty away team");
+    }
+
+    @Test
+    void testStartMatchBlankTeamName() {
+        // Act & Assert
+        assertThrows(ScoreBoardException.class, () -> scoreBoard.startMatch("  ", "Team B"), "Should throw exception for blank home team");
+        assertThrows(ScoreBoardException.class, () -> scoreBoard.startMatch("Team A", "  "), "Should throw exception for blank away team");
+    }
+
+    @Test
     void testUpdateScoreValidInput() throws ScoreBoardException {
         // Arrange
         Match match = scoreBoard.startMatch("Team A", "Team B");
@@ -96,7 +110,7 @@ public class ScoreBoardTest {
     @Test
     void testUpdateScoreMatchNotFromBoard() {
         // Arrange
-        Match match = new Match("Team A", "Team B");
+        Match match = new Match("Team A", "Team B", System.currentTimeMillis());
 
         // Act & Assert
         assertThrows(ScoreBoardException.class, () -> scoreBoard.updateScore(match, (short) 1, (short) 1), "Should throw exception for matches out of board");
@@ -130,7 +144,7 @@ public class ScoreBoardTest {
     @Test
     void testFinishMatchNotFromBoard() {
         // Arrange
-        Match match = new Match("Team A", "Team B");
+        Match match = new Match("Team A", "Team B", System.currentTimeMillis());
 
         // Act & Assert
         assertThrows(ScoreBoardException.class, () -> scoreBoard.finishMatch(match), "Should throw exception for matches out of board");
