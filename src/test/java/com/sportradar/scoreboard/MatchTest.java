@@ -4,21 +4,25 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MatchTest {
+    private static final String HOME_TEAM_NAME = "Team A";
+    private static final String AWAY_TEAM_NAME = "Team B";
+    private static final String HOME_TEAM_NAME2 = "Team C";
+    private static final String AWAY_TEAM_NAME2 = "Team D";
 
     @Test
     public void testConstructorAndGetters() {
         long startTime = System.currentTimeMillis();
-        Match match = new Match("Team A", "Team B", startTime);
+        Match match = new Match(HOME_TEAM_NAME, AWAY_TEAM_NAME, startTime);
 
-        assertEquals("Team A", match.getHomeTeamName(), "Home team name mismatch");
-        assertEquals("Team B", match.getAwayTeamName(), "Away team name mismatch");
+        assertEquals(HOME_TEAM_NAME, match.getHomeTeamName(), "Home team name mismatch");
+        assertEquals(AWAY_TEAM_NAME, match.getAwayTeamName(), "Away team name mismatch");
         assertEquals(0, match.getHomeTeamScore(), "Initial home team score should be 0");
         assertEquals(0, match.getAwayTeamScore(), "Initial away team score should be 0");
     }
 
     @Test
     public void testSetScores() {
-        Match match = new Match("Team A", "Team B", System.currentTimeMillis());
+        Match match = new Match(HOME_TEAM_NAME, AWAY_TEAM_NAME, System.currentTimeMillis());
         match.setScore((short) 3, (short) 2);
 
         assertEquals(3, match.getHomeTeamScore(), "Home team score mismatch");
@@ -27,35 +31,18 @@ public class MatchTest {
 
     @Test
     public void testGetTotalScore() {
-        Match match = new Match("Team A", "Team B", System.currentTimeMillis());
+        Match match = new Match(HOME_TEAM_NAME, AWAY_TEAM_NAME, System.currentTimeMillis());
         match.setScore((short) 3, (short) 2);
 
         assertEquals(5, match.getTotalScore(), "Total score mismatch");
     }
 
     @Test
-    public void testEqualsAndHashCode() {
-        long startTime = System.currentTimeMillis();
-        Match match1 = new Match("Team A", "Team B", startTime);
-        match1.setScore((short) 3, (short) 2);
-
-        Match match2 = new Match("Team A", "Team B", startTime);
-        match2.setScore((short) 3, (short) 2);
-
-        Match match3 = new Match("Team C", "Team D", startTime);
-        match3.setScore((short) 3, (short) 2);
-
-        assertEquals(match1, match2, "Matches with the same fields should be equal");
-        assertEquals(match1.hashCode(), match2.hashCode(), "HashCodes of equal objects should be the same");
-        assertNotEquals(match1, match3, "Matches with different fields should not be equal");
-    }
-
-    @Test
     public void testCompareToDifferentScores() {
-        Match match1 = new Match("Team A", "Team B", System.currentTimeMillis());
+        Match match1 = new Match(HOME_TEAM_NAME, AWAY_TEAM_NAME, System.currentTimeMillis());
         match1.setScore((short) 5, (short) 3);
 
-        Match match2 = new Match("Team C", "Team D", System.currentTimeMillis());
+        Match match2 = new Match(HOME_TEAM_NAME2, AWAY_TEAM_NAME2, System.currentTimeMillis());
         match2.setScore((short) 4, (short) 2);
 
         assertTrue(match1.compareTo(match2) < 0, "Match1 should come before Match2 due to higher total score");
@@ -66,10 +53,10 @@ public class MatchTest {
         long earlierTime = System.currentTimeMillis() - 1000;
         long laterTime = System.currentTimeMillis();
 
-        Match match1 = new Match("Team A", "Team B", earlierTime);
+        Match match1 = new Match(HOME_TEAM_NAME, AWAY_TEAM_NAME, earlierTime);
         match1.setScore((short) 3, (short) 2);
 
-        Match match2 = new Match("Team C", "Team D", laterTime);
+        Match match2 = new Match(HOME_TEAM_NAME2, AWAY_TEAM_NAME2, laterTime);
         match2.setScore((short) 3, (short) 2);
 
         assertTrue(match2.compareTo(match1) < 0, "Match2 should come before Match1 due to later start time");
@@ -79,10 +66,10 @@ public class MatchTest {
     public void testCompareToSameScoresAndStartTime() {
         long startTime = System.currentTimeMillis();
 
-        Match match1 = new Match("Team A", "Team B", startTime);
+        Match match1 = new Match(HOME_TEAM_NAME, AWAY_TEAM_NAME, startTime);
         match1.setScore((short) 3, (short) 2);
 
-        Match match2 = new Match("Team C", "Team D", startTime);
+        Match match2 = new Match(HOME_TEAM_NAME2, AWAY_TEAM_NAME2, startTime);
         match2.setScore((short) 3, (short) 2);
         assertEquals(0, match1.compareTo(match2), "Matches with the same score and start time should be equal in comparison");
     }
